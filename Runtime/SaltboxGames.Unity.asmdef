@@ -1,6 +1,6 @@
 {
     "name": "SaltboxGames.Unity",
-    "rootNamespace": "",
+    "rootNamespace": "SaltboxGames.Unity",
     "references": [
         "GUID:c6e52672dbbe48a095011a6924b86b76",
         "GUID:75469ad4d38634e559750d17036d5f7c",
