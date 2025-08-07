@@ -11,7 +11,7 @@ using UnityEngine;
 
 namespace SaltboxGames.Unity.Utilities
 {
-    public class LogUtils
+    public class LogUtil
     {
         [HideInCallstack]
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
