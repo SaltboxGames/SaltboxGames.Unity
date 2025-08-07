@@ -1,6 +1,6 @@
 {
     "name": "SaltboxGames.Unity.Editor",
-    "rootNamespace": "",
+    "rootNamespace": "SaltboxGames.Unity.Editor",
     "references": [
         "GUID:c6e52672dbbe48a095011a6924b86b76",
         "GUID:8b0df3f762f285d47baad4d7e2d55903",
