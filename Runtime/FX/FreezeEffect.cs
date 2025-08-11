@@ -10,7 +10,7 @@
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
-namespace CameraTricks
+namespace SaltboxGames.Unity.FX
 {
     public class FreezeEffect
     {

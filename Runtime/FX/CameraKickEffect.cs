@@ -10,7 +10,7 @@
 using Unity.Cinemachine;
 using UnityEngine;
 
-namespace CameraTricks
+namespace SaltboxGames.Unity.FX
 {
     [RequireComponent(typeof(CinemachineCamera))]
     public class CameraKickEffect : CinemachineExtension
