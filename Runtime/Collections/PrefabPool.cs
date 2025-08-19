@@ -10,6 +10,10 @@ namespace SaltboxGames.Unity.Collections
         [SerializeField]
         private GameObject _prefab;
 
+        [NonSerialized]
+        private int count;
+        public int ActiveCount => count;
+        
         private Stack<PoolableObject> pool = new Stack<PoolableObject>();
         
         private void OnValidate()
@@ -40,6 +44,8 @@ namespace SaltboxGames.Unity.Collections
             {
                 poolable.transform.SetPositionAndRotation(position, rotation);
             }
+
+            count++;
             
             poolable.InvokeSpawn();
             poolable.gameObject.SetActive(true);
@@ -57,6 +63,8 @@ namespace SaltboxGames.Unity.Collections
 
             poolable.InvokeDespawned();
             poolable.gameObject.SetActive(false);
+
+            count--;
             
             pool.Push(poolable);
         }
