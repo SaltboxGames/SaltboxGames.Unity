@@ -16,9 +16,11 @@ using System.Threading.Tasks;
 using Cysharp.Threading.Tasks;
 using SaltboxGames.Core.Terminals;
 using SaltboxGames.Core.Utilities;
+using SaltboxGames.Unity.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using LogType = SaltboxGames.Core.Terminals.LogType;
 
@@ -34,6 +36,8 @@ namespace SaltboxGames.Unity
 
         [SerializeField, Header("UI References")]
         private GameObject _terminalRoot;
+        private bool IsOpen => _terminalRoot.activeSelf;
+        
         [SerializeField]
         private TMP_Text _logText;
         [SerializeField]
@@ -41,15 +45,21 @@ namespace SaltboxGames.Unity
         [SerializeField]
         private TMP_InputField _inputField;
         
-        [SerializeField, Header("Controls")]
-        private InputActionAsset actions;
         
-        private InputActionMap terminalActions;
-        private InputActionMap gameplayActions;
         
-        private InputAction AutoCompleteAction;
-        private InputAction HistoryUpAction;
-        private InputAction HistoryDownAction;
+        [SerializeField]
+        [Header("Controls")]
+        private InputActionReference _toggleAction;
+        [SerializeField]
+        private InputActionReference _autoCompleteAction;
+        [SerializeField]
+        private InputActionReference _historyUpAction;
+        [SerializeField]
+        private InputActionReference _historyDownAction;
+        
+        [SerializeField]
+        private InputActionMapReference[] _disableOnOpen;
+        
         
         private readonly Queue<string> logQueue = new Queue<string>();
         private readonly ConcurrentQueue<string> pendingLogLines = new ConcurrentQueue<string>();
@@ -61,48 +71,19 @@ namespace SaltboxGames.Unity
 
         private ICommandRunner commandRunner;
         
-        
         private void Awake()
         {
             _inputField.onSubmit.AddListener(OnInputSubmitted);
-
-            terminalActions = actions.FindActionMap("Terminal");
-            gameplayActions = actions.FindActionMap("Gameplay");
-             
-            AutoCompleteAction = actions.FindAction("Terminal/AutoComplete");
-            HistoryUpAction = actions.FindAction("Terminal/HistoryUp");
-            HistoryDownAction = actions.FindAction("Terminal/HistoryDown");
-
-            AutoCompleteAction.performed += context =>
+            
+            _toggleAction.action.performed += _ => SetActive(!IsOpen);
+            _historyUpAction.action.performed += _ => BrowseHistory(-1);
+            _historyDownAction.action.performed += _ => BrowseHistory(1);
+            _autoCompleteAction.action.performed += context =>
             {
                 _ = HandleAutocomplete();
             };
-
-            HistoryUpAction.performed += context =>
-            {
-                BrowseHistory(-1);
-            };
             
-            HistoryDownAction.performed += context =>
-            {
-                BrowseHistory(1);
-            };
-        }
-
-        private void OnEnable()
-        {
-            gameplayActions.Disable();
-            terminalActions.Enable();
-
-            // Select Input Field;
-            UniTask.NextFrame()
-                .ContinueWith(_inputField.ActivateInputField);
-        }
-
-        private void OnDisable()
-        {
-            gameplayActions.Enable();
-            terminalActions.Disable();
+            SetActive(false);
         }
 
         private void Update()
@@ -119,7 +100,7 @@ namespace SaltboxGames.Unity
                 logChanges = true;
             }
 
-            if (!_terminalRoot.activeSelf)
+            if (!IsOpen)
             {
                 return;
             }
@@ -130,15 +111,35 @@ namespace SaltboxGames.Unity
             }
         }
 
-        public void Toggle()
+        public void SetActive(bool state)
         {
-            bool newState = !_terminalRoot.activeSelf;
-            _terminalRoot.SetActive(newState);
-
-            if (newState)
+            _terminalRoot.SetActive(state);
+            if (state)
             {
-                _inputField.ActivateInputField();
+                _autoCompleteAction.action.Enable();
+                _historyUpAction.action.Enable();
+                _historyDownAction.action.Enable();
+            
+                foreach (InputActionMapReference mapRef in _disableOnOpen)
+                {
+
+                    mapRef.ActionMap.Disable();
+                }
+
+                UniTask.NextFrame()
+                    .ContinueWith(_inputField.ActivateInputField);
                 RefreshDisplay();
+            }
+            else
+            {
+                _autoCompleteAction.action.Disable();
+                _historyUpAction.action.Disable();
+                _historyDownAction.action.Disable();
+                
+                foreach (InputActionMapReference mapRef in _disableOnOpen)
+                {
+                    mapRef.ActionMap.Enable();
+                }
             }
         }
 
@@ -282,6 +283,8 @@ namespace SaltboxGames.Unity
 
         private void BrowseHistory(int direction)
         {
+            Debug.Log("Testing");
+            
             if (history.Count == 0)
             {
                 return;
