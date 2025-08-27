@@ -1,6 +1,8 @@
 ﻿#if ADDRESSABLES_2
 
 using System;
+using SaltboxGames.Core.Shims;
+using SaltboxGames.Unity.Editor.Utilities;
 using UnityEditor;
 using UnityEngine;
 
@@ -25,8 +27,8 @@ namespace SaltboxGames.Unity.Editor
                 label.text = String.Empty;
             }
 
-            string guid = sceneGUID.stringValue;
-            string path = AssetDatabase.GUIDToAssetPath(guid);
+            SafeGuid guid = sceneGUID.GetGuidValue();
+            string path = AssetDatabase.GUIDToAssetPath(guid.ToString());
 
             SceneAsset current = null;
             if (!string.IsNullOrEmpty(path))
@@ -44,11 +46,11 @@ namespace SaltboxGames.Unity.Editor
                 {
                     string selectedPath = AssetDatabase.GetAssetPath(selected);
                     string newGuid = AssetDatabase.AssetPathToGUID(selectedPath);
-                    sceneGUID.stringValue = newGuid;
+                    sceneGUID.SetGuidValue(Guid.Parse(newGuid));
                 }
                 else
                 {
-                    sceneGUID.stringValue = string.Empty;
+                    sceneGUID.SetGuidValue(default);
                 }
             }
 

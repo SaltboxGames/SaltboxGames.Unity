@@ -11,6 +11,7 @@
 
 using System;
 using Cysharp.Threading.Tasks;
+using SaltboxGames.Core.Shims;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
 using UnityEngine.ResourceManagement.AsyncOperations;
@@ -23,11 +24,11 @@ namespace SaltboxGames.Unity
     public class AssetReferenceScene
     {
         [SerializeField, HideInInspector]
-        internal string _sceneGuid;
+        public SafeGuid _sceneGuid;
         
         public async UniTask<SceneInstance> LoadSceneAsync(LoadSceneMode mode = LoadSceneMode.Additive)
         {
-            AsyncOperationHandle<SceneInstance> handle = Addressables.LoadSceneAsync(_sceneGuid, mode);
+            AsyncOperationHandle<SceneInstance> handle = Addressables.LoadSceneAsync(_sceneGuid.ToString(), mode);
             if (handle.IsDone)
             {
                 return handle.Result;
