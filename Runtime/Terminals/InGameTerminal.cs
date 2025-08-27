@@ -58,7 +58,7 @@ namespace SaltboxGames.Unity
         private InputActionReference _historyDownAction;
         
         [SerializeField]
-        private InputActionMapReference[] _disableOnOpen;
+        private ActionGroup[] _disableOnOpen;
         
         
         private readonly Queue<string> logQueue = new Queue<string>();
@@ -120,10 +120,9 @@ namespace SaltboxGames.Unity
                 _historyUpAction.action.Enable();
                 _historyDownAction.action.Enable();
             
-                foreach (InputActionMapReference mapRef in _disableOnOpen)
+                foreach (ActionGroup mapRef in _disableOnOpen)
                 {
-
-                    mapRef.ActionMap.Disable();
+                    mapRef.Disable();
                 }
 
                 UniTask.NextFrame()
@@ -136,9 +135,9 @@ namespace SaltboxGames.Unity
                 _historyUpAction.action.Disable();
                 _historyDownAction.action.Disable();
                 
-                foreach (InputActionMapReference mapRef in _disableOnOpen)
+                foreach (ActionGroup mapRef in _disableOnOpen)
                 {
-                    mapRef.ActionMap.Enable();
+                    mapRef.Enable();
                 }
             }
         }
