@@ -20,7 +20,6 @@ using SaltboxGames.Unity.Utilities;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 using LogType = SaltboxGames.Core.Terminals.LogType;
 
@@ -59,6 +58,7 @@ namespace SaltboxGames.Unity
         
         [SerializeField]
         private ActionGroup[] _disableOnOpen;
+        private bool[] _actionGroupStates;
         
         
         private readonly Queue<string> logQueue = new Queue<string>();
@@ -73,6 +73,8 @@ namespace SaltboxGames.Unity
         
         private void Awake()
         {
+            _actionGroupStates = new bool[_disableOnOpen.Length];
+            
             _inputField.onSubmit.AddListener(OnInputSubmitted);
             
             _toggleAction.action.performed += _ => SetActive(!IsOpen);
@@ -119,10 +121,12 @@ namespace SaltboxGames.Unity
                 _autoCompleteAction.action.Enable();
                 _historyUpAction.action.Enable();
                 _historyDownAction.action.Enable();
-            
-                foreach (ActionGroup mapRef in _disableOnOpen)
+
+                for (int index = 0; index < _disableOnOpen.Length; index++)
                 {
-                    mapRef.Disable();
+                    ActionGroup mapRef = _disableOnOpen[index];
+                    _actionGroupStates[index] = mapRef.IsIsEnabled;
+                    mapRef.SetEnabled(false);
                 }
 
                 UniTask.NextFrame()
@@ -135,9 +139,10 @@ namespace SaltboxGames.Unity
                 _historyUpAction.action.Disable();
                 _historyDownAction.action.Disable();
                 
-                foreach (ActionGroup mapRef in _disableOnOpen)
+                for (int index = 0; index < _disableOnOpen.Length; index++)
                 {
-                    mapRef.Enable();
+                    ActionGroup mapRef = _disableOnOpen[index];
+                    mapRef.SetEnabled(_actionGroupStates[index]);
                 }
             }
         }
@@ -282,8 +287,6 @@ namespace SaltboxGames.Unity
 
         private void BrowseHistory(int direction)
         {
-            Debug.Log("Testing");
-            
             if (history.Count == 0)
             {
                 return;

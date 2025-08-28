@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,20 +9,35 @@ namespace SaltboxGames.Unity.Utilities
     public class ActionGroup : ScriptableObject
     {
         [SerializeField]
+        private bool _startDisabled;
+        
+        [SerializeField]
         private List<InputActionReference> actions = new List<InputActionReference>();
-        public void Enable()
+        
+        private bool isEnabled;
+        public bool IsIsEnabled => isEnabled;
+
+        private void Awake()
         {
-            foreach (InputActionReference inputAction in actions)
-            {
-                inputAction.action.Enable();
-            }
+            SetEnabled(!_startDisabled);
         }
 
-        public void Disable()
+        public void SetEnabled(bool enabled)
         {
-            foreach (InputActionReference inputAction in actions)
+            isEnabled = enabled;
+            if (enabled)
             {
-                inputAction.action.Disable();
+                foreach (InputActionReference inputAction in actions)
+                {
+                    inputAction.action.Enable();
+                }
+            }
+            else
+            {
+                foreach (InputActionReference inputAction in actions)
+                {
+                    inputAction.action.Disable();
+                }
             }
         }
     }
