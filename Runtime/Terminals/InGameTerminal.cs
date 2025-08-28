@@ -19,6 +19,7 @@ using SaltboxGames.Core.Utilities;
 using SaltboxGames.Unity.Utilities;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -45,8 +46,6 @@ namespace SaltboxGames.Unity
         [SerializeField]
         private TMP_InputField _inputField;
         
-        
-        
         [SerializeField]
         [Header("Controls")]
         private InputActionReference _toggleAction;
@@ -56,11 +55,12 @@ namespace SaltboxGames.Unity
         private InputActionReference _historyUpAction;
         [SerializeField]
         private InputActionReference _historyDownAction;
-        
+
         [SerializeField]
-        private ActionGroup[] _disableOnOpen;
-        
-        
+        public UnityEvent OnOpen;
+        [SerializeField]
+        public UnityEvent OnClose;
+
         private readonly Queue<string> logQueue = new Queue<string>();
         private readonly ConcurrentQueue<string> pendingLogLines = new ConcurrentQueue<string>();
         private readonly ConcurrentQueue<string> inputQueue = new ConcurrentQueue<string>();
@@ -82,8 +82,11 @@ namespace SaltboxGames.Unity
             {
                 _ = HandleAutocomplete();
             };
-            
-            SetActive(false);
+
+            _terminalRoot.SetActive(false);
+            _autoCompleteAction.action.Disable();
+            _historyUpAction.action.Disable();
+            _historyDownAction.action.Disable();
         }
 
         private void Update()
@@ -119,11 +122,8 @@ namespace SaltboxGames.Unity
                 _autoCompleteAction.action.Enable();
                 _historyUpAction.action.Enable();
                 _historyDownAction.action.Enable();
-            
-                foreach (ActionGroup mapRef in _disableOnOpen)
-                {
-                    mapRef.Disable();
-                }
+
+                OnOpen?.Invoke();
 
                 UniTask.NextFrame()
                     .ContinueWith(_inputField.ActivateInputField);
@@ -134,11 +134,8 @@ namespace SaltboxGames.Unity
                 _autoCompleteAction.action.Disable();
                 _historyUpAction.action.Disable();
                 _historyDownAction.action.Disable();
-                
-                foreach (ActionGroup mapRef in _disableOnOpen)
-                {
-                    mapRef.Enable();
-                }
+
+                OnClose?.Invoke();
             }
         }
 

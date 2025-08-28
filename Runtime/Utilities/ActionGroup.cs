@@ -9,6 +9,19 @@ namespace SaltboxGames.Unity.Utilities
     {
         [SerializeField]
         private List<InputActionReference> actions = new List<InputActionReference>();
+
+        public void SetEnabled(bool isEnabled)
+        {
+            if (isEnabled)
+            {
+                Enable();
+            }
+            else
+            {
+                Disable();
+            }
+        }
+
         public void Enable()
         {
             foreach (InputActionReference inputAction in actions)
