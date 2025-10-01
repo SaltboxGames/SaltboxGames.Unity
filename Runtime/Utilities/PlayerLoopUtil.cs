@@ -51,7 +51,7 @@ namespace SaltboxGames.Unity.Utilities
             InsertInto(typeof(PostLateUpdate), earlyUpdateSystem);
         }
         
-        private static void InsertInto(Type target, PlayerLoopSystem newSystem)
+        public static void InsertInto(Type target, PlayerLoopSystem newSystem)
         {
             PlayerLoopSystem loop = PlayerLoop.GetCurrentPlayerLoop();
     
