@@ -1,10 +1,16 @@
-﻿using SaltboxGames.Core.Shims;
+﻿using System.Reflection;
+using SaltboxGames.Core.Shims;
 using UnityEditor;
 
 namespace SaltboxGames.Unity.Editor.Utilities
 {
     public static class SerializedPropertyExtensions
     {
+        public static FieldInfo GetFieldInfo(this SerializedProperty property)
+        {
+            return EditorReflection.GetFieldInfoFromProperty(property);
+        }
+        
         public static SafeGuid GetGuidValue(this SerializedProperty p)
         {
             int s1 = p.FindPropertyRelative("segment1").intValue;

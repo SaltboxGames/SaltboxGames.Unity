@@ -28,7 +28,7 @@ namespace SaltboxGames.Unity
         
         public async UniTask<SceneInstance> LoadSceneAsync(LoadSceneMode mode = LoadSceneMode.Additive)
         {
-            AsyncOperationHandle<SceneInstance> handle = Addressables.LoadSceneAsync(_sceneGuid.ToString(), mode);
+            AsyncOperationHandle<SceneInstance> handle = Addressables.LoadSceneAsync(_sceneGuid, mode);
             if (handle.IsDone)
             {
                 return handle.Result;
