@@ -1,3 +1,12 @@
+// SPDX-License-Identifier: MPL-2.0
+/*
+ * Copyright (c) 2024-2026 Saltbox Games Cooperative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -6,16 +15,28 @@ using UnityEngine;
 
 namespace SaltboxGames.Unity.Editor.Utilities
 {
+    /// <summary>
+    /// Provides cached reflection helpers for Unity editor internals used by custom inspectors and drawers.
+    /// </summary>
     public static class EditorReflection
     {
         private static Func<string> _getActiveFolderPath;
         private static Func<SerializedProperty, FieldInfo> _getFieldInfoFromProperty;
 
+        /// <summary>
+        /// Gets the currently selected project window folder path, or "Assets" when Unity internals cannot be bound.
+        /// </summary>
+        /// <returns>The active project folder path.</returns>
         public static string GetActiveFolderPath()
         {
             return _getActiveFolderPath();
         }
 
+        /// <summary>
+        /// Gets the reflected field backing a serialized property.
+        /// </summary>
+        /// <param name="property">The serialized property to inspect.</param>
+        /// <returns>The backing field info, or <see langword="null"/> when Unity internals cannot be bound.</returns>
         public static FieldInfo GetFieldInfoFromProperty(SerializedProperty property)
         {
             return _getFieldInfoFromProperty(property);

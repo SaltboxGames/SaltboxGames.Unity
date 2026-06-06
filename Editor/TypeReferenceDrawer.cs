@@ -1,11 +1,18 @@
-﻿
+// SPDX-License-Identifier: MPL-2.0
+/*
+ * Copyright (c) 2024-2026 Saltbox Games Cooperative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
+
 using UnityEditor;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using SaltboxGames.Unity;
-using ZLinq;
 
 [CustomPropertyDrawer(typeof(TypeReference<>), useForChildren: true)]
 public class TypeReferenceDrawer : PropertyDrawer
@@ -30,7 +37,6 @@ public class TypeReferenceDrawer : PropertyDrawer
         if (subTypes == null)
         {
             subTypes = TypeCache.GetTypesDerivedFrom(genericArg)
-                .AsValueEnumerable()
                 .Where(t => t.IsClass && !t.IsAbstract)
                 .OrderBy(t => t.Name)
                 .ToArray();

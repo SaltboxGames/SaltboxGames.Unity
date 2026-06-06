@@ -1,17 +1,22 @@
-﻿/*
- * Copyright (c) 2024 SaltboxGames, Jonathan Gardner
+// SPDX-License-Identifier: MPL-2.0
+/*
+ * Copyright (c) 2024-2026 Saltbox Games Cooperative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/.
  */
 
+#if CINEMACHINE
 
 using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace SaltboxGames.Unity.FX
 {
+    /// <summary>
+    /// Provides a time-scale based freeze-frame effect.
+    /// </summary>
     public class FreezeEffect
     {
         private static bool _isFreezing;
@@ -37,3 +42,5 @@ namespace SaltboxGames.Unity.FX
         }
     }
 }
+
+#endif
