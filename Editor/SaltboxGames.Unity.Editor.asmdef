@@ -24,6 +24,16 @@
             "name": "com.unity.addressables",
             "expression": "",
             "define": "ADDRESSABLES_2"
+        },
+        {
+            "name": "com.cysharp.zlinq",
+            "expression": "",
+            "define": "ZLINQ"
+        },
+        {
+            "name": "com.unity.cinemachine",
+            "expression": "",
+            "define": "CINEMACHINE"
         }
     ],
     "noEngineReferences": false

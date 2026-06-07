@@ -1,5 +1,6 @@
-﻿/*
- * Copyright (c) 2024 SaltboxGames, Jonathan Gardner
+// SPDX-License-Identifier: MPL-2.0
+/*
+ * Copyright (c) 2024-2026 Saltbox Games Cooperative
  *
  * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
@@ -11,11 +12,17 @@ using UnityEngine;
 
 namespace SaltboxGames.Unity.Extensions
 {
+    /// <summary>
+    /// Provides extension methods for <see cref="Vector3"/>.
+    /// </summary>
     public static class Vector3Extensions
     {
         /// <summary>
-        /// Returns the Squared Distance between targets;
+        /// Returns the squared distance between two vectors.
         /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <returns>The squared distance between <paramref name="a"/> and <paramref name="b"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static float SqrDistance(this Vector3 a, Vector3 b)
         {
@@ -26,6 +33,10 @@ namespace SaltboxGames.Unity.Extensions
         /// Returns true if the squared distance between vectors is less than or equal to the threshold.
         /// Avoids the cost of a square root.
         /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <param name="maxDistance">The maximum allowed distance.</param>
+        /// <returns><see langword="true"/> when the vectors are within <paramref name="maxDistance"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDistanceWithin(this Vector3 a, Vector3 b, float maxDistance)
         {
@@ -36,6 +47,10 @@ namespace SaltboxGames.Unity.Extensions
         /// Returns true if the squared distance between vectors is more than the threshold.
         /// Avoids the cost of a square root.
         /// </summary>
+        /// <param name="a">The first vector.</param>
+        /// <param name="b">The second vector.</param>
+        /// <param name="maxDistance">The maximum allowed distance.</param>
+        /// <returns><see langword="true"/> when the vectors are farther apart than <paramref name="maxDistance"/>.</returns>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static bool IsDistanceOutside(this Vector3 a, Vector3 b, float maxDistance)
         {
