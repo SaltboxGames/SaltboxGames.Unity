@@ -12,6 +12,12 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using SaltboxGames.Core.Services;
 using SaltboxGames.Unity.Utilities;
+using UnityEngine;
+
+#if ENABLE_PROFILER
+using System.Reflection;
+using Unity.Profiling;
+#endif
 
 namespace SaltboxGames.Unity.Services
 {
@@ -45,7 +51,7 @@ namespace SaltboxGames.Unity.Services
         /// <returns>A disposable subscription that stops invoking the callback when disposed.</returns>
         public IDisposable SubscribeEarlyUpdate(Action callback)
         {
-            Subscription subscription = new Subscription(callback);
+            Subscription subscription = new Subscription(callback, nameof(EarlyUpdate));
             earlyUpdateCallbacks.Add(subscription);
             return subscription;
         }
@@ -57,7 +63,7 @@ namespace SaltboxGames.Unity.Services
         /// <returns>A disposable subscription that stops invoking the callback when disposed.</returns>
         public IDisposable SubscribeUpdate(Action callback)
         {
-            Subscription subscription = new Subscription(callback);
+            Subscription subscription = new Subscription(callback, nameof(Update));
             updateCallbacks.Add(subscription);
             return subscription;
         }
@@ -69,7 +75,7 @@ namespace SaltboxGames.Unity.Services
         /// <returns>A disposable subscription that stops invoking the callback when disposed.</returns>
         public IDisposable SubscribeLateUpdate(Action callback)
         {
-            Subscription subscription = new Subscription(callback);
+            Subscription subscription = new Subscription(callback, nameof(LateUpdate));
             lateUpdateCallbacks.Add(subscription);
             return subscription;
         }
@@ -99,7 +105,23 @@ namespace SaltboxGames.Unity.Services
                 Subscription subscription = callbacks[i];
                 if (!subscription.IsDisposed)
                 {
-                    subscription.Callback.Invoke();
+#if ENABLE_PROFILER
+                    subscription.ProfilerMarker.Begin();
+#endif
+                    try
+                    {
+                        subscription.Callback.Invoke();
+                    }
+                    catch (Exception exception)
+                    {
+                        Debug.LogException(exception);
+                    }
+                    finally
+                    {
+#if ENABLE_PROFILER
+                        subscription.ProfilerMarker.End();
+#endif
+                    }
                 }
             }
 
@@ -123,17 +145,32 @@ namespace SaltboxGames.Unity.Services
         private sealed class Subscription : IDisposable
         {
             public readonly Action Callback;
+#if ENABLE_PROFILER
+            public readonly ProfilerMarker ProfilerMarker;
+#endif
             public bool IsDisposed;
 
-            public Subscription(Action callback)
+            public Subscription(Action callback, string phaseName)
             {
                 Callback = callback;
+#if ENABLE_PROFILER
+                ProfilerMarker = new ProfilerMarker(GetProfilerMarkerName(callback, phaseName));
+#endif
             }
 
             public void Dispose()
             {
                 IsDisposed = true;
             }
+
+#if ENABLE_PROFILER
+            private static string GetProfilerMarkerName(Action callback, string phaseName)
+            {
+                MethodInfo method = callback.Method;
+                string typeName = method.DeclaringType?.FullName ?? "<unknown>";
+                return $"{nameof(PlayerLoopService)}.{phaseName}::{typeName}.{method.Name}";
+            }
+#endif
         }
     }
 }
