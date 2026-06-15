@@ -26,8 +26,13 @@
         },
         {
             "name": "com.unity.cinemachine",
-            "expression": "",
-            "define": "CINEMACHINE"
+            "expression": "[2.0.0,3.0.0)",
+            "define": "CINEMACHINE_2"
+        },
+        {
+            "name": "com.unity.cinemachine",
+            "expression": "[3.0.0,4.0.0)",
+            "define": "CINEMACHINE_3"
         }
     ],
     "noEngineReferences": false

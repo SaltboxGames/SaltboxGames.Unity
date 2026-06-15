@@ -8,7 +8,7 @@
  */
 
 
-#if CINEMACHINE
+#if CINEMACHINE_3
 
 using Unity.Cinemachine;
 using UnityEngine;
