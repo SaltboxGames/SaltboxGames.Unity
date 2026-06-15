@@ -10,7 +10,7 @@
 #if ADDRESSABLES_2
 
 using System;
-using Cysharp.Threading.Tasks;
+using System.Threading.Tasks;
 using SaltboxGames.Core.Shims;
 using UnityEngine;
 using UnityEngine.AddressableAssets;
@@ -37,7 +37,7 @@ namespace SaltboxGames.Unity
         /// </summary>
         /// <param name="mode">The scene load mode.</param>
         /// <returns>A task that resolves to the loaded scene instance.</returns>
-        public async UniTask<SceneInstance> LoadSceneAsync(LoadSceneMode mode = LoadSceneMode.Additive)
+        public async Task<SceneInstance> LoadSceneAsync(LoadSceneMode mode = LoadSceneMode.Additive)
         {
             AsyncOperationHandle<SceneInstance> handle = Addressables.LoadSceneAsync(_sceneGuid, mode);
             if (handle.IsDone)
