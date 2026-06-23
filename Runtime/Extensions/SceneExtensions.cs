@@ -27,7 +27,6 @@ namespace SaltboxGames.Unity.Extensions
         /// <param name="component">The found component, or <see langword="default"/> when no root component matches.</param>
         /// <returns><see langword="true"/> when a matching component is found; otherwise, <see langword="false"/>.</returns>
         public static bool TryGetRootComponent<T>(this Scene scene, out T component)
-            where T : Component
         {
             List<GameObject> gameObjects = ListPool<GameObject>.Shared.Rent();
             scene.GetRootGameObjects(gameObjects);
@@ -36,7 +35,7 @@ namespace SaltboxGames.Unity.Extensions
             {
                 for (int i = 0; i < gameObjects.Count; i++)
                 {
-                    if (gameObjects[i].TryGetComponent<T>(out component))
+                    if (gameObjects[i].TryGetComponent(out component))
                     {
                         return true;
                     }
