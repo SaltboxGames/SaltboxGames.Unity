@@ -19,7 +19,7 @@ namespace SaltboxGames.Unity.Services
     /// <summary>
     /// Unity component wrapper around <see cref="ServiceScope"/> that registers child <see cref="MonoService"/> components.
     /// </summary>
-    public sealed class MonoServiceScope : MonoBehaviour, IServiceScope
+    public sealed class MonoServiceScope : MonoBehaviour, IServiceScope, IServiceScopeProvider
     {
         private IServiceScope _internal;
         private IServiceScope Scope
@@ -30,6 +30,8 @@ namespace SaltboxGames.Unity.Services
                 return _internal;
             }
         }
+
+        public IServiceScope Services => Scope;
         
         IServiceScope IServiceScope.Parent
         {
