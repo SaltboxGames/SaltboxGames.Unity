@@ -1,8 +1,11 @@
-// using System;
-// using System.Collections.Generic;
-// using SaltboxGames.Core.Services;
-// using UnityEngine;
-// using UnityEngine.Pool;
+// SPDX-License-Identifier: MPL-2.0
+/*
+ * Copyright (c) 2026 Saltbox Games Cooperative
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/.
+ */
 
 using System;
 using SaltboxGames.Core.Services;
@@ -32,12 +35,20 @@ namespace SaltboxGames.Unity.Services
             where T : class, IService
         {
             IServiceScope serviceScope = GetServiceScope(component);
-            if (serviceScope != null)
+            return serviceScope.GetService<T>();
+        }
+        
+        public static T GetService<T>(this Component component, ref T service)
+            where T : class, IService
+        {
+            if(service != null)
             {
-                return serviceScope.GetService<T>();
+                return service;
             }
             
-            throw new InvalidOperationException($"{component.name} could not find a {nameof(T)} in scope.");
+            IServiceScope serviceScope = GetServiceScope(component);
+            service = serviceScope.GetService<T>();
+            return service;
         }
     }
 }
