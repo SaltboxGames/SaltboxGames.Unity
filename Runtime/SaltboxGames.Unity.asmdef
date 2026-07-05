@@ -6,7 +6,8 @@
         "Unity.Cinemachine",
         "Unity.TextMeshPro",
         "Unity.Addressables",
-        "Unity.ResourceManager"
+        "Unity.ResourceManager",
+        "UniTask"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
@@ -35,6 +36,11 @@
             "name": "com.unity.cinemachine",
             "expression": "[3.0.0,4.0.0)",
             "define": "CINEMACHINE_3"
+        },
+        {
+            "name": "com.cysharp.unitask",
+            "expression": "[2.0.0,3.0.0)",
+            "define": "UNITASK_2"
         }
     ],
     "noEngineReferences": false
