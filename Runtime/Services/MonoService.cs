@@ -19,7 +19,7 @@ namespace SaltboxGames.Unity.Services
     public abstract class MonoService : MonoBehaviour, IService
     {
         /// <inheritdoc />
-        public Task InitializeAsync(IServiceInitializer services)
+        public virtual Task InitializeAsync(IServiceInitializer services)
         {
             return Task.CompletedTask;
         }

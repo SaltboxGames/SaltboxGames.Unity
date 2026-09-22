@@ -22,7 +22,12 @@ namespace SaltboxGames.Unity.Services
     {
         public static IServiceScope GetServiceScope(this Component component)
         {
-            IServiceScopeProvider provider = component.GetComponentInParent<IServiceScopeProvider>();
+            if (component.TryGetComponent(out IServiceScopeProvider provider))
+            {
+                return provider.Services;
+            }
+            
+            provider = component.GetComponentInParent<IServiceScopeProvider>();
             if (provider != null)
             {
                 return provider.Services;
